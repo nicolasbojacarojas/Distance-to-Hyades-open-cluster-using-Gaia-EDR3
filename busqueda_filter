@@ -1,0 +1,11 @@
+SELECT gaia_source.source_id,gaia_source.ra,gaia_source.ra_error,gaia_source.dec,gaia_source.dec_error,gaia_source.parallax,gaia_source.parallax_error,gaia_source.parallax_over_error,gaia_source.pm,gaia_source.pmra_error,gaia_source.pmdec,gaia_source.pmdec_error,gaia_source.ra_dec_corr,gaia_source.ra_parallax_corr,gaia_source.ra_pmra_corr,gaia_source.ra_pmdec_corr,gaia_source.dec_parallax_corr,gaia_source.dec_pmra_corr,gaia_source.dec_pmdec_corr,gaia_source.parallax_pmra_corr,gaia_source.parallax_pmdec_corr,gaia_source.pmra_pmdec_corr,gaia_source.astrometric_excess_noise,gaia_source.visibility_periods_used,gaia_source.ruwe,gaia_source.phot_g_mean_flux_over_error,gaia_source.phot_g_mean_mag,gaia_source.phot_bp_mean_flux_over_error,gaia_source.phot_bp_mean_mag,gaia_source.phot_rp_mean_flux_over_error,gaia_source.phot_rp_mean_mag,gaia_source.bp_rp,gaia_source.dr2_radial_velocity,gaia_source.dr2_radial_velocity_error
+FROM gaiaedr3.gaia_source 
+WHERE 
+CONTAINS(
+	POINT('ICRS',gaiaedr3.gaia_source.ra,gaiaedr3.gaia_source.dec),
+	CIRCLE(
+		'ICRS',
+		COORD1(EPOCH_PROP_POS(66.725,15.86667,21.0520,104.9200,-28.0000,39.9600,2000,2016.0)),
+		COORD2(EPOCH_PROP_POS(66.725,15.86667,21.0520,104.9200,-28.0000,39.9600,2000,2016.0)),
+		10)
+)=1 AND  (gaiaedr3.gaia_source.parallax>0 AND gaiaedr3.gaia_source.pmra IS NOT NULL AND gaiaedr3.gaia_source.pmra != 0 AND gaiaedr3.gaia_source.pmdec IS NOT NULL AND gaiaedr3.gaia_source.pmdec != 0 AND abs(gaiaedr3.gaia_source.pmra_error/gaiaedr3.gaia_source.pmra) < 0.10 AND abs(gaiaedr3.gaia_source.pmdec_error/gaiaedr3.gaia_source.pmdec) < 0.10 AND gaiaedr3.gaia_source.visibility_periods_used > 8 AND abs(gaiaedr3.gaia_source.parallax_error/gaiaedr3.gaia_source.parallax) < 0.10 AND abs(gaiaedr3.gaia_source.ra_error/gaiaedr3.gaia_source.ra) < 0.10 AND abs(gaiaedr3.gaia_source.dec_error/gaiaedr3.gaia_source.dec) < 0.10 AND gaiaedr3.gaia_source.phot_g_mean_flux_over_error > 10 AND gaiaedr3.gaia_source.phot_bp_mean_flux_over_error > 10 AND gaiaedr3.gaia_source.phot_rp_mean_flux_over_error > 10 AND gaiaedr3.gaia_source.ruwe < 1.4 AND gaiaedr3.gaia_source.pmra > 0 and gaiaedr3.gaia_source.pmra < 250 AND gaiaedr3.gaia_source.pmdec > -200 AND gaiaedr3.gaia_source.pmdec < 200)
